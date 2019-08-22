@@ -105,6 +105,7 @@
 		<input type="hidden" name="pro_id" value="2">
 	</form>
 	<script>
+	
 		$(document).ready(function() {
 			var formObj = $("form[role='form']");
 			console.log(formObj);

@@ -206,12 +206,6 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
 		</dependency>
-		<!-- JQUERY -->
-		<dependency>
-			<groupId>org.webjars.bower</groupId>
-			<artifactId>jquery</artifactId>
-			<version>3.4.1</version>
-		</dependency>
 		<!-- bcrypt 암호화 -->
 		<dependency>
 			<groupId>org.mindrot</groupId>
@@ -242,6 +236,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.9</version>
+		</dependency>
+		<!-- JQUERY -->
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.4.1</version>
 		</dependency>
 	</dependencies>
 	<build>

@@ -13,9 +13,11 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
@@ -43,7 +45,7 @@ public class MemberController {
 	// 회원가입 처리
 	@RequestMapping(value = "/joinPOST", method = RequestMethod.POST)
 	public String joinPOST(MemberDTO memDTO, RedirectAttributes redirect) throws Exception {
-
+		
 		// pw암호화 : BCrypt.hashpw(암호화할 비밀번호, 암호화된 비밀번호);
 		String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
 		memDTO.setMem_password(hashedPW);
@@ -52,6 +54,19 @@ public class MemberController {
 		redirect.addFlashAttribute("msg", "registered");
 
 		return "redirect:/user/login";
+	}
+	
+	//회원가입 이메일 중복확인
+	@ResponseBody
+	@RequestMapping(value = "/emailCheck", method = RequestMethod.POST)
+	public int emailCheck(@RequestBody String mem_email) throws Exception{
+		System.out.println(mem_email);
+		//아이디 중복확인
+		int chk = memService.userfindID(mem_email);
+		System.out.println("이메일 중복확인 : " +  chk);
+			
+		return chk;
+		
 	}
 	
 	// sns회원가입 페이지로 이동
@@ -72,29 +87,29 @@ public class MemberController {
 
 			return "redirect:/user/login";
 		}
-	
-	@RequestMapping(value = "/emailConfirm", method = RequestMethod.GET)
-	public String emailConfirm(@RequestParam String mem_email, @RequestParam String email_key, Model model) throws Exception{
-		System.out.println("--------------- controller emailConfirm() : 이메일 인증 확인");
-		System.out.println(mem_email + " / " + email_key);
 		
-		// 1: 회원가입
-		int email_type = 1;
-		int key = memService.chkKey(mem_email, email_type);
 		
-		if(key==0) {
-			model.addAttribute("expired", key);
-		}	
-		
-		System.out.println("*****"+key);
+		//이메일 확인
+		@RequestMapping(value = "/emailConfirm", method = RequestMethod.GET)
+		public String emailConfirm(@RequestParam String mem_email, @RequestParam String email_key, Model model) throws Exception{
+			System.out.println("--------------- controller emailConfirm() : 이메일 인증 확인");
+			System.out.println(mem_email + " / " + email_key);
+			
+			// 1: 회원가입
+			int email_type = 1;
+			int key = memService.chkKey(mem_email, email_type);
+			
+			if(key==0) {
+				model.addAttribute("expired", key);
+			}	
+			
+			System.out.println("*****"+key);
 
-		memService.emailAuth(mem_email,email_key);
-		model.addAttribute("mem_email", mem_email);
+			memService.emailAuth(mem_email,email_key);
+			model.addAttribute("mem_email", mem_email);
 
-		return "user/confirm";
-	}
-	
-
+			return "user/confirm";
+		}
 		
 	// 로그인 페이지로 이동
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -228,11 +243,14 @@ public class MemberController {
 		return "/user/logout";
 	}
 	
-
-
 	// myinfo페이지 이동
 	@RequestMapping(value = "/myinfo")
-	public String myinfoGET(@RequestParam int mem_idx, Model model) throws Exception {
+	public String myinfoGET(@RequestParam int mem_idx, Model model, HttpSession http) throws Exception {
+		MemberDTO log = (MemberDTO) http.getAttribute("login");
+		if(mem_idx!=log.getMem_idx()) {
+			model.addAttribute("msg", "nomatch");
+			return "user/confirm";
+		}
 
 		model.addAttribute("myinfo", memService.myinfo(mem_idx));
 		return "user/myinfo";
@@ -289,25 +307,25 @@ public class MemberController {
 	}
 	
 	
-	@RequestMapping(value = "/userfind", method = RequestMethod.GET)
+	@RequestMapping(value = "/userfind")
 	public String userfindGET() throws Exception{
 		return "user/userfind";
 	}
 	
 	//아이디 찾기
 	@RequestMapping(value = "/userfind_id", method = RequestMethod.POST)
-	public String userfindID(@RequestParam String find, Model model) throws Exception{
+	public String userfindID(@RequestParam String mem_email, Model model) throws Exception{
 		
-		model.addAttribute("find", find);
+		model.addAttribute("mem_email", mem_email);
 		
-		int chk = memService.userfindID(find);
+		int chk = memService.userfindID(mem_email);
 				
 		if(chk==0) {
 			//System.out.println("아이디 없음");
-			model.addAttribute("msg", "0");
+			model.addAttribute("msg", "1");
 		}else if(chk==1){
 			//System.out.println("아이디 있음");
-			model.addAttribute("msg", "1");
+			model.addAttribute("msg", "2");
 		}
 		
 		return "user/userfind";
@@ -317,9 +335,19 @@ public class MemberController {
 	@RequestMapping(value = "/userfind_pw", method = RequestMethod.POST)
 	public String userfindPW(@RequestParam String findpw, Model model) throws Exception{
 		
+		int chk = memService.userfindID(findpw);
+		
+		if(chk==0) {
+			//System.out.println("아이디 없음");
+			model.addAttribute("msg", "noemail");
+			model.addAttribute("mem_email", findpw);
+			return "user/userfind";
+		}
+		
+				
 		memService.userfindPW(findpw);
 		model.addAttribute("msg", "email");
-		model.addAttribute("find", findpw);
+		model.addAttribute("mem_email", findpw);
 			
 		return "user/userfind";
 	}

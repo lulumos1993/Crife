@@ -1,89 +1,226 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<style type="text/css">
-.table_view {
-	width: 600px;
-	margin: 0 auto;
-}
 
-.table_view tfoot {
-	text-align: center;
-}
-</style>
-<!-- bootstrap 적용 -->
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-	crossorigin="anonymous">
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-	crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-	crossorigin="anonymous"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-	crossorigin="anonymous"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#btnSave").click(function() {
-			var email = $("#mem_email").val();
-			if (email == "") {
-				alert("이메일 입력해");
-				document.getElementById('joinform').mem_email.focus();
-				return;
-			}
-			document.getElementById('joinform').submit();
-		});
-	});
-</script>
+<link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/checkout/">
+
+<link href="../css/bootstrap.min.css" rel="stylesheet"	crossorigin="anonymous">
+<link href="../css/form-validation.css" rel="stylesheet">
+
+<!-- 유효성 검사 -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="../css/jquery-slim.min.js"><\/script>')</script>
+<script src="../css/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../css/form-validation.js"></script>
+	<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
 <meta charset="UTF-8">
 <title>회원가입</title>
 </head>
 <body>
+
 <%@ include file="../include/navbar.jsp"%>
-<form id="joinform" action="/funding/user/joinPOST" method="post">
 
-		<table class="table_view">
-			<caption>회원가입</caption>
-			<tr>
-				<th scope="row">이메일 및 아이디</th>
-				<td><input name="mem_email" id="mem_email" type="text" placeholder="이메일 및 아이디"> </td>
-			</tr>
-			<tr>
-				<th scope="row">비밀번호</th>
-				<td><input name="mem_password" id="mem_password" type="password" placeholder="비밀번호"></td>
-			</tr>
-			<tr>
-				<th scope="row">비밀번호 확인</th>
-				<td><input name="mem_repassword" id="mem_repassword" type="password"	placeholder="비밀번호 확인"></td>
-			</tr>
-			<tr>
-				<th scope="row">이름</th>
-				<td><input name="mem_name" id="mem_name" type="text" placeholder="이름"></td>
-			</tr>
-			<tr>
-				<th scope="row">전화번호</th>
-				<td><input name="mem_phone" id="mem_phone" type="text" placeholder="전화번호"></td>
-			</tr>
-			<tr>
-				<th scope="row">주민번호</th>
-				<td><input name="mem_birth" id="mem_birth" type="text"  maxlength="6" placeholder="생년월일"> - 
-					<input name="mem_sex" id="mem_sex" type="text" maxlength="1">XXXXXX
-				</td>
-			</tr>
-			<tr>
-				<th colspan="2"><input type="button" id="btnSave" value="확인">
-								<input type="reset" value="다시쓰기"></th>
-			</tr>
-		</table>
+<br>
+<br>
+
+<div class="container">
+	
+	<form id="formjoin" class="needs-validation" method="post" action ="${path}/user/joinPOST" novalidate >
+
+		<h1 class="h3 mb-3 font-weight-norma">회원가입</h1>
+
+		<div class="mb-3">
+			<label for="email">Email    <span id="check"></span></label> 
+			<div class="input-group mb-3">
+			<input type="email" class="form-control" id="mem_email" name="mem_email" 
+					placeholder="you@example.com" value required autofocus>
+			<div class="input-group-append">
+    		<button class="btn btn-outline-secondary" type="button" id="emailcheck">이메일 중복확인</button>
+  			</div>
+			<div class="invalid-feedback">이메일을 입력해 주세요</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-6 mb-3">
+			<label for="password">비밀번호       <span id="pwc"></span></label> 
+			<input type="password" class="form-control" id="mem_password" name="mem_password" 
+					placeholder="비밀번호" value required maxlength="15" minlength="8">
+			<div class="invalid-feedback">비밀번호를 입력해 주세요</div>
+			</div>
+			<div class="col-md-6 mb-3">
+			<label for="repassword">비밀번호 재입력       <span id="repwc"></span></label> 
+			<input type="password" class="form-control" id="mem_repassword" name="mem_repassword" 
+					placeholder="비밀번호 재입력" value required maxlength="15" minlength="8">
+			<div class="invalid-feedback">비밀번호를 다시 입력해 주세요</div>
+			</div>
+		</div>	
+		
+		<div class="mb-3">
+			<label for="name">이름 </label> 
+			<input type="text" class="form-control" id="mem_name" name="mem_name" 
+					placeholder="이름" value required>
+			<div class="invalid-feedback">이름을 입력해 주세요</div>
+		</div>
+		<div class="mb-3">
+			<label for="phone">전화번호</label> 
+			<input type="text" class="form-control" id="mem_phone" name="mem_phone" 
+					placeholder="전화번호 : 숫자만 입력하세요" value required maxlength="13">
+			<div class="invalid-feedback">전화번호를 입력해 주세요</div>
+		</div>
+			
+		<div class="mb-3">
+			<label for="birth_sex">주민번호</label> 
+			<div class="input-group">
+			<input type="text" class="form-control" id="mem_birth" name="mem_birth" 
+					placeholder="생년월일" value required maxlength="6" minlength="6"> 
+				<div class="invalid-feedback">6자리 숫자를 입력해 주세요</div>
+			 - 
+			<input type="text" class="form-control" id="mem_sex" name="mem_sex"	
+					placeholder="성별"  value required maxlength="1">
+			<div class="input-group-append"><span class="input-group-text">XXXXXX</span></div>
+				<div class="invalid-feedback">1자리 숫자를 입력해 주세요</div>
+			</div>
+		</div>
+		<button type="submit" id="btnSave" class="btn btn-lg btn-primary btn-block">확인</button>
 	</form>
-
+	
+</div>
 </body>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+<script>
+$(function(){
+	var chk = 0;
+	//이메일 중복확인	
+	
+	$("#emailcheck").on({
+	click:function(){
+		var mem_email = $("#mem_email").val();
+		//console.log("mem_eamil : "+mem_email);
+		
+		 $.ajax({
+			url : "/funding/user/emailCheck",
+			type : "post",
+			data : mem_email,
+			dataType : 'text',
+			contentType:"application/json", //추가해줘야 특수문자 그대로 이동함! 필수!
+			success : function(data){
+				//console.log("결과 : "+data);
+				if(data > 0){
+					$("#check").text("가입된 이메일 입니다.");
+					$("#check").css("color","red");
+				}else{
+					$("#check").text("사용가능한 이메일 입니다.");
+					$("#check").css("color","green");
+
+					chk = 1;
+				}
+			},
+			error : function(){
+				console.log("이메일 중복확인 실패");
+			}
+		});
+	}
+	});
+
+	//이메일 유효성 검사
+	var getMail = RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/);
+	$("#mem_email").on({
+
+		keydown : function(){
+		var mem_email = $("#mem_email").val();
+			if(!getMail.test(mem_email)){
+				$("#check").text("이메일 형식이 아닙니다.");
+				$("#check").css("color","red");
+			}else{
+				$("#check").text("");
+			}
+		}
+
+	});
+
+
+	//pw 유효성 검사 : 8자리 이상, 15자리 이하, 문자+숫자+특문
+	var pwCheck = RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/);
+	$("#mem_password").keydown(function(){
+		var mem_password = $("#mem_password").val();
+		if(!pwCheck.test(mem_password)){
+			$("#pwc").text("비밀번호는 8자리 이상, 최소 1개의 문자, 숫자, 특수문자로 이루어져야 합니다.");
+			$("#pwc").css("color","red");
+		}else{
+			$("#pwc").text("");
+		}
+	});
+	
+
+	//pw와 repw일치
+	$("#mem_repassword").keyup(function(){
+		var mem_password = $("#mem_password").val();
+		var mem_repassword = $("#mem_repassword").val();
+		
+		if(mem_password == mem_repassword){
+			$("#repwc").text("비밀번호가 일치합니다.");
+			$("#repwc").css("color","green"); 
+		}else {
+			$("#repwc").text("비밀번호가 불일치");
+			$("#repwc").css("color","red");
+		}
+	});
+	
+	//이름 한글만 입력
+	
+
+	//전화번호 자동 하이픈 & 숫자만 입력
+	$('#mem_phone').keydown(function(event) {
+	    var key = event.charCode || event.keyCode || 0;
+	    $text = $(this);
+	    if (key !== 8 && key !== 9) {
+	        if ($text.val().length === 3) {
+	            $text.val($text.val() + '-');
+	        }
+	        if ($text.val().length === 8) {
+	            $text.val($text.val() + '-');
+	        }
+	    }
+	    return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));          
+	});
+
+	
+
+	//생년월일 & 성별 숫자만 입력
+
+
+ 	//이메일 중복확인을 해야됨
+	$("#btnSave").click(function(e){
+		if(chk!=1){
+			alert("이메일 중복확인을 해주세요.");
+			return false;
+		}
+	});
+
+	
+		
+});
+
+</script>
+
 </html>

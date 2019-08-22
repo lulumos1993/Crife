@@ -14,7 +14,7 @@
 	text-align: center;
 }
 </style>
-<script src="<c:url value='/webjars/jquery/3.4.1/dist/jquery.min.js' />"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script type="text/javascript">
 	var msg = "${msg}";
 

@@ -19,8 +19,13 @@
 	crossorigin="anonymous"></script>
 <script type="text/javascript">
 	var mem_email = "${mem_email}";
- 	var msg = "${expired}";
-	if(msg=="expired"){
+ 	var expired = "${expired}";
+ 	var msg = "${msg}";
+ 	
+	if(msg=="nomatch"){
+		alert("잘못된 접근입니다. 돌아가!");
+		self.location='<c:url value="/"/>';
+	}else if(expired=="expired"){
 		alert("만료된 링크입니다.");
 		self.location='<c:url value="/"/>';
 	} else{

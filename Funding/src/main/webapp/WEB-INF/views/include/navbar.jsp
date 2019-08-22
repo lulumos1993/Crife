@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
@@ -60,13 +61,14 @@ ul.topnav li.right {
 		<li><a href="${path}/community/qna/qna.do">Q&A</a></li>
 		<li><a href="${path}/admin/adminhome.do">관리자</a></li>
 		<li class="right"><a href="${path}/project/check">펀딩오픈신청</a></li>
-		<c:if test="${sessionScope.login == null}">
+		<c:if test="${login == null}">
 			<li class="right"><a href="${path}/user/login">로그인</a></li>
 			<li class="right"><a href="${path}/user/join">회원가입</a></li>
 		</c:if>
-		<c:if test="${sessionScope.login != null}">
+		<c:if test="${login != null}">
 			<li class="right"><a href="${path}/user/logout">로그아웃</a></li>
 			<li class="right"><a href="${path}/project/my_pro">내 프로젝트 목록</a></li>
+			<li class="right"><a href="${path}/user/myinfo?mem_idx=${login.mem_idx}">내정보</a></li>
 		</c:if>
 	</ul>
 </body>
