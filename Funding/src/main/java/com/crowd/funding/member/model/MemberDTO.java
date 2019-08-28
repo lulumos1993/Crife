@@ -8,7 +8,7 @@ import lombok.Data;
 public class MemberDTO {
 
 	// 회원가입시 받을 최소 정보
-	private int mem_idx;
+	public int mem_idx;
 	private int mem_type;
 	private String mem_email;
 	private String mem_password;
@@ -27,8 +27,11 @@ public class MemberDTO {
 	private String mem_address2;
 	private String mem_address3;
 	private String mem_address4;
-	private String mem_photo; // 기본이미지 default로 추가해주기
+	public String mem_photo; // 기본이미지 default로 추가해주기
 
 	private String naver_idx;
+
+
+	
 
 }

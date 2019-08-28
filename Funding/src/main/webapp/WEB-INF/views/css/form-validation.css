@@ -1,5 +1,37 @@
 .container {
-  max-width: 600px;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+	width: 700px;
 }
 
-.lh-condensed { line-height: 1.25; }
+@media ( min-width : 768px) {
+	.container {
+		width: 750px;
+	}
+}
+
+@media ( min-width : 992px) {
+	.container {
+		width: 970px;
+	}
+}
+
+@media ( min-width : 1200px) {
+	.container {
+		width: 1170px;
+	}
+}
+
+.lh-condensed {
+	line-height: 1.25;
+}
+
+.message {
+	font-size: 10px
+}
+
+#half {
+	size: 340px;
+}

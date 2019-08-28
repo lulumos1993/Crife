@@ -3,12 +3,14 @@ package com.crowd.funding.member.controller;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
@@ -42,6 +45,7 @@ public class MemberController {
 	public String joinGET() throws Exception {
 		return "user/user_join";
 	}
+	
 	// 회원가입 처리
 	@RequestMapping(value = "/joinPOST", method = RequestMethod.POST)
 	public String joinPOST(MemberDTO memDTO, RedirectAttributes redirect) throws Exception {
@@ -53,7 +57,7 @@ public class MemberController {
 		memService.joinPOST(memDTO);
 		redirect.addFlashAttribute("msg", "registered");
 
-		return "redirect:/user/login";
+		return "user/login";
 	}
 	
 	//회원가입 이메일 중복확인
@@ -166,8 +170,8 @@ public class MemberController {
 		MemberDTO memDTO = memService.loginPOST(logDTO);
 
 		System.out.println("##### 로그인 시도");
-		System.out.println("### 아이디 : " + logDTO.getMem_email());
-		System.out.println("### 비밀번호 : " + logDTO.getMem_password());
+		//System.out.println("### 아이디 : " + logDTO.getMem_email());
+		//System.out.println("### 비밀번호 : " + logDTO.getMem_password());
 
 		// 아이디가 없거나, 비밀번호가 불일치 하면 메서드 종료
 		if (memDTO == null) {
@@ -184,7 +188,6 @@ public class MemberController {
 				System.out.println("휴면계정");
 				model.addAttribute("msg", "3");
 				// 내용 추가해야함 - 
-				// 1년이내 로그인 시도하면, 휴면계정 풀리도록?
 				// 휴면계정 DB에 회원정보 이동.??
 				return;
 			}
@@ -258,7 +261,7 @@ public class MemberController {
 
 	// myinfo - 수정
 	@RequestMapping(value = "/myinfo_up")
-	public String myinfoUP(@ModelAttribute MemberDTO memDTO, Model model, RedirectAttributes redirect) throws Exception {
+	public String myinfoUP(@ModelAttribute MemberDTO memDTO, Model model, RedirectAttributes redirect, MultipartFile file) throws Exception {
 		System.out.println("%%% 회원번호 : " + memDTO.getMem_idx() + " 수정 %%%");
 
 		// 수정 전 정보
@@ -276,7 +279,15 @@ public class MemberController {
 		// pw암호화 : BCrypt.hashpw(암호화할 비밀번호, 암호화된 비밀번호);
 		String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
 		memDTO.setMem_password(hashedPW);
+		
+		String original = file.getOriginalFilename();
+		System.out.println("오리지널 : " +original);
+		/*
+		 * //프로필이미지 String savedurl = memService.photourl(); //이름 중복 확인 //UUID를 사용해야 할까?
+		 * 파일의 고유성을 위해?? memDTO.setMem_photo(savedurl);
+		 */
 
+		//수정
 		memService.myinfoUP(memDTO);
 
 		

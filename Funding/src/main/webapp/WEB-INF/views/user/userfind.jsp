@@ -68,7 +68,7 @@
 	
 		<h1 class="h3 mb-3 font-weight-norma"> 아이디 찾기 </h1>
 		<div class="mb-3">
-			<input name="mem_email" id="mem_email" type="text" placeholder="이메일 계정" autofocus> 		
+			<input class="form-control" name="mem_email" id="mem_email" type="text" placeholder="이메일 계정" autofocus> 		
 			<button class="btn btn-outline-secondary" type="button" id="btnid">확인</button>
 		</div>
 
@@ -85,7 +85,7 @@
   			이메일로 발송해드립니다.
   		</p>
 		<div class="mb-3">
-			<input name="findpw" id="findpw" type="text" placeholder="이메일  계정"> 		
+			<input class="form-control" name="findpw" id="findpw" type="text" placeholder="이메일  계정"> 		
 			<button class="btn btn-outline-secondary" type="button" id="btnpw">확인</button>
 		</div>
 

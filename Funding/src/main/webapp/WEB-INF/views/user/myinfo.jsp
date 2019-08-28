@@ -31,6 +31,13 @@
           font-size: 3.5rem;
         }
       }
+      .img_wrap{
+      	width: 300px;
+      	margin-top: 50px;
+      }
+      .img_wrap img{
+      	max-width: 100%;
+      }
     </style>
 
 <meta charset="UTF-8">
@@ -42,7 +49,7 @@
 
 <div class="container">
 
-<form id="myinfoform" method="post" class="needs-validation" >
+<form id="myinfoform" method="post" class="needs-validation" enctype="multipart/form-data" target="ifr">
 
 	<h1 class="h3 mb-3 font-weight-norma"> 내 정보 </h1>
 	<div class="mb-3">
@@ -117,9 +124,10 @@
 			</div>
 	</div>
 	<div class="mb-3">
-			<label for="image">프로필 이미지 </label> 
-			나중에ㅇㅅㅇ
+			<label for="image">프로필 이미지 ${myinfo.mem_photo } </label> 
+			<input type="file" id="mem_photo" name="file" value="${myinfo.mem_photo }">
 	</div>
+	
 	<div class="row">
 	<div class="col-md-6 mb-3">
 		<button type="button" id="btn_up" class="btn btn-lg btn-primary btn-block"> 수정 </button>
@@ -136,20 +144,20 @@
 	
 	<script type="text/javascript">
 	$(function() {
-
+		//자신의 정보에만 접근 할 수 있도록 정보 제한
 		if(${login.mem_idx}!=${myinfo.mem_idx}){
 			alert("잘못된 접근 입니다. 돌아가!");
 			self.location='<c:url value="/"/>';
 		}
-
 		
-
+	//비밀번호 입력후에 수정&탈퇴 가능
 	var chkPW = "${chkPW}";
 	if(chkPW==="false"){
 		alert("비밀번호 불일치. 비밀번호 확인해");
 		document.getElementById('myinfoform').mem_password.focus();
 	}
 
+	//수정
 	$("#btn_up").click(function() {
 		var pw = $("#mem_password").val();
 		var repw = $("#mem_repassword").val();
@@ -167,6 +175,7 @@
 		document.getElementById('myinfoform').submit();
 	});
 
+	//탈퇴
 	$("#btn_del").click(function() {
 		var pw = $("#mem_password").val();
 		var repw = $("#mem_repassword").val();
@@ -187,6 +196,8 @@
 	
 	
 });
+
+
 </script>
 	
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>

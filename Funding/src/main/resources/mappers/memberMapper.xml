@@ -91,7 +91,7 @@
 			mem_password=#{mem_password},mem_name=#{mem_name},mem_phone=#{mem_phone},
 			mem_zipcode=#{mem_zipcode},mem_address1=#{mem_address1},mem_address2=#{mem_address2},
 			mem_address3=#{mem_address3},mem_address4=#{mem_address4}
-		<!-- ,mem_photo=#{mem_photo} -->
+		 	,mem_photo=#{mem_photo}
 		where mem_idx=#{mem_idx}
 	</update>
 
