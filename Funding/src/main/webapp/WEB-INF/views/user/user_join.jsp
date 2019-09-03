@@ -10,7 +10,6 @@
 <link href="../css/form-validation.css" rel="stylesheet">
 
 <!-- 유효성 검사 -->
-
 <script>window.jQuery || document.write('<script src="../css/jquery-slim.min.js"><\/script>')</script>
 <script src="../css/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="../css/form-validation.js"></script>
@@ -43,7 +42,7 @@
 
 <div class="container">
 	
-	<form id="formjoin" class="needs-validation" action="/funding/user/joinPOST" novalidate method="post">
+	<form id="formjoin" class="needs-validation" action="${path }/user/joinPOST" novalidate method="post">
 
 		<h1 class="h3 mb-3 font-weight-norma">회원가입</h1>
 
@@ -75,20 +74,20 @@
 		</div>	
 		
 		<div class="mb-3">
-			<label for="name">이름 </label> 
+			<label for="name">이름  <span id="name" class="message"></label> 
 			<input type="text" class="form-control" id="mem_name" name="mem_name" 
 					placeholder="이름" value required>
 			<div class="invalid-feedback">이름을 입력해 주세요</div>
 		</div>
 		<div class="mb-3">
-			<label for="phone">전화번호</label> 
+			<label for="phone">전화번호  <span id="phone" class="message"></label> 
 			<input type="text" class="form-control" id="mem_phone" name="mem_phone" 
 					placeholder="전화번호 : 숫자만 입력하세요" value required maxlength="13">
 			<div class="invalid-feedback">전화번호를 입력해 주세요</div>
 		</div>
 				
 		<div class="mb-3">
-			<label for="birth_sex">주민번호</label> 
+			<label for="birth_sex">주민번호  <span id="num" class="message"></label> 
 			<div class="input-group" >
 			<input type="text" class="form-control" id="mem_birth" name="mem_birth" 
 					placeholder="생년월일" value required maxlength="6" minlength="6"> 
@@ -122,7 +121,7 @@ $(document).ready(function(){
 		//console.log("mem_eamil : "+mem_email);
 		
 		 $.ajax({
-			url : "/funding/user/emailCheck",
+			url : "${path}/user/emailCheck",
 			type : "post",
 			data : mem_email,
 			dataType : 'text',
@@ -191,10 +190,22 @@ $(document).ready(function(){
 	});
 	
 	//이름 한글만 입력
-	
+	$('#mem_name').keydown(function(event){
+		 var regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+         var v = $(this).val();
+         if (regexp.test(v)) {
+        	 $("#name").text("한글만 입력해 주세요.");
+			 $("#name").css("color","red");
+             $(this).val(v.replace(regexp, ''));
+         }else{
+        	 $("#name").text("");
+         }
+
+	});
 
 	//전화번호 자동 하이픈 & 숫자만 입력
 	$('#mem_phone').keydown(function(event) {
+		//특수문자, 영어 입력 안됨! 숫자와 한글만 입력됨ㅜㅜ 한글도 입력하지 않도록?
 	    var key = event.charCode || event.keyCode || 0;
 	    $text = $(this);
 	    if (key !== 8 && key !== 9) {
@@ -209,8 +220,30 @@ $(document).ready(function(){
 	}); 
 
 	
-
 	//생년월일 & 성별 숫자만 입력
+	$('#mem_birth').keydown(function(event){
+		var regexp = /[^0-9]/gi;
+        var v = $(this).val();
+        if (regexp.test(v)) {
+        	$("#num").text("6자리 숫자만 입력해 주세요.");
+			$("#num").css("color","red");
+            $(this).val(v.replace(regexp, ''));
+        }else{
+        	$("#num").text("");
+        }
+
+	});
+	$('#mem_sex').keydown(function(event){
+		var regexp = /[^0-9]/gi;
+        var v = $(this).val();
+        if (regexp.test(v)) {
+        	$("#num").text("숫자만 입력해 주세요.");
+			$("#num").css("color","red");
+            $(this).val(v.replace(regexp, ''));
+        }else{
+        	$("#num").text("");
+        }
+	});
 
 
  	//이메일 중복확인을 해야됨
@@ -230,57 +263,4 @@ $(document).ready(function(){
 });
 
 </script>
-<!-- 
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script> 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-<script type="text/javascript">
-
-$(document).ready(function(){
-
-	$("#formjoin").validate({
-		onfocusout : function(element){
-			$(element).valid();
-		},
-		rules : {
-			mem_email : { required: true, email : true ,rangelength : [5,40]},
-			mem_password : { required: true, rangelength : [8,15] , 
-							regx : /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/ },
-			mem_repassword : { required: true, equalTo : "#mem_password" },
-			mem_name : { required: true, regx : /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g },
-// phone 메소드 만들어서 추가하기!
-			mem_phone : { required: true, rangelength : [11,13]},
-			mem_birth : { required: true, digits : true, rangelength : [6,6]},
-			mem_sex : { required: true, digits : true, range : [1,9]}		
-			//digits vs number : digits는 양의 정수만 허용	
-		},
-		messages : {
-			mem_email : { required: "이메일을 입력해 주세요.", email : "이메일 형식이 잘못되었습니다." 
-							,rangelength : "5자 이상 40자 이하로 입력해주십시오."},
-			mem_password : { required: "비밀번호를 입력해주세요." , rangelength : "8자리 이상 15자리 이하로 입력해주세요."  , 
-							regx : "최소 1개의 문자, 숫자, 특수문자 조합이 필요합니다." },
-			mem_repassword : { required: "비밀번호를 재입력해주세요.", equalTo : "비밀번호가 일치하지 않습니다."  },
-			mem_name : { required: "이름을 입력해주세요.", regx : "한글로 입력해주세요"},
-			mem_phone : { required: "전화번호를 입력해주세요." , rangelength : ""},
-			mem_birth : { required: "생년월일을 6자로 입력해주세요.", digits : "숫자만 입력해주세요", rangelength : "6자리 숫자만 입력해주세요." },
-			mem_sex : { required: "한글자 숫자로 입력해주세요." , digits : "숫자만 입력해주세요.", range : "한글자만 입력해주세요." }			
-		},
-		/* errorPlacement : function(error, element){
-			if(element.hasClass("invalid-feedback")){
-				error.insertBefore(element);
-			} 
-		}, */
-		invalidHandler : function(form, validator){
-			
-		},
-		submitHandler : function(form){
-			
-		}
-
-	});
-	
-});
-
-</script> -->
-
 </html>

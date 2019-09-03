@@ -26,11 +26,17 @@ public interface MemberDAO {
 	void myinfoUP(MemberDTO memDTO) throws Exception;
 	// 내정보 - 삭제(탈퇴요청)
 	void myinfoDEL(int mem_idx) throws Exception;
+	int statusPro(int mem_idx);
+	
 	// 아이디 찾기
 	int userfindID(String find) throws Exception;
 	// 비밀번호 재설정 이메일 발송
 	void userfindPW(String find, String email_key) throws Exception;
 	// 비밀번호 재설정
 	void resetPW(String mem_password, String mem_email, String email_key) throws Exception;
+	
+	
+	MemberDTO memchk_lastlogin(MemberDTO mem) throws Exception;
+	
 
 }

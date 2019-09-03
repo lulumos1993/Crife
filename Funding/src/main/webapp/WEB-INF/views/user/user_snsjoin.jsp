@@ -14,13 +14,13 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
-	var msg = "${msg}";
+	var loginmsg = "${loginmsg}";
 
-	if (msg === "0") {
+	if (msg === "nosnsid") {
 		alert("가입되어 있지 않은 회원입니다. 회원가입을 해 주세요.");
-	}else if (msg === "3") {
+	}else if (msg === "memtype_3") {
 		alert("탈퇴를 신청했던 계정입니다.");
-		self.location = '<c:url value="/user/login"/>';
+		self.location = '<c:url value="/"/>';
 	}
 
 	$(document).ready(function() {
@@ -75,13 +75,68 @@
 
 		});
 
-	 	//이메일 중복확인 &비밀번호 일치 을 해야됨
-		$("#btnSave").click(function(e){
+
+
+		//pw 유효성 검사 : 8자리 이상, 15자리 이하, 문자+숫자+특문
+		var pwCheck = RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/);
+		$("#mem_password").keydown(function(){
+			var mem_password = $("#mem_password").val();
+			if(!pwCheck.test(mem_password)){
+				$("#pwc").text("최소 8자리 이상, 최소 1개의 문자, 숫자, 특수문자");
+				$("#pwc").css("color","red");
+			}else{
+				$("#pwc").text("");
+			}
+		});
+		
+
+		//pw와 repw일치
+		$("#mem_repassword").keyup(function(){
+			var mem_password = $("#mem_password").val();
+			var mem_repassword = $("#mem_repassword").val();
+			
+			if(mem_password == mem_repassword){
+				$("#repwc").text("비밀번호가 일치합니다.");
+				$("#repwc").css("color","green"); 
+				chkpw = 1;
+			}else {
+				$("#repwc").text("비밀번호가 불일치");
+				$("#repwc").css("color","red");
+			}
+		});
+		
+		//이름 한글만 입력
+		
+
+		//전화번호 자동 하이픈 & 숫자만 입력
+		$('#mem_phone').keydown(function(event) {
+		    var key = event.charCode || event.keyCode || 0;
+		    $text = $(this);
+		    if (key !== 8 && key !== 9) {
+		        if ($text.val().length === 3) {
+		            $text.val($text.val() + '-');
+		        }
+		        if ($text.val().length === 8) {
+		            $text.val($text.val() + '-');
+		        }
+		    }
+		    return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));          
+		}); 
+
+		
+
+		//생년월일 & 성별 숫자만 입력
+
+		//이메일 중복확인을 해야됨
+		$("#btnSave").click(function(){
 			if(chk!=1 ){
 				alert("이메일 중복을 확인 해주세요.");
 				return false;
+			} else if(chkpw!=1){
+				alert("비밀번호를 확인 해주세요.");
+				return false;
 			}
-			document.getElementById('SNSjoinform').submit();
+
 		});
 
 	});

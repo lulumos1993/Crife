@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -64,7 +65,7 @@ public class MemberController {
 	@ResponseBody
 	@RequestMapping(value = "/emailCheck", method = RequestMethod.POST)
 	public int emailCheck(@RequestBody String mem_email) throws Exception{
-		System.out.println(mem_email);
+		System.out.println("이메일 중복 확인 ajax : "+mem_email);
 		//아이디 중복확인
 		int chk = memService.userfindID(mem_email);
 		System.out.println("이메일 중복확인 : " +  chk);
@@ -93,28 +94,26 @@ public class MemberController {
 		}
 		
 		
-		//이메일 확인
-		@RequestMapping(value = "/emailConfirm", method = RequestMethod.GET)
-		public String emailConfirm(@RequestParam String mem_email, @RequestParam String email_key, Model model) throws Exception{
-			System.out.println("--------------- controller emailConfirm() : 이메일 인증 확인");
-			System.out.println(mem_email + " / " + email_key);
-			
-			// 1: 회원가입
-			int email_type = 1;
-			int key = memService.chkKey(mem_email, email_type);
-			
-			if(key==0) {
-				model.addAttribute("expired", key);
-			}	
-			
-			System.out.println("*****"+key);
-
-			memService.emailAuth(mem_email,email_key);
-			model.addAttribute("mem_email", mem_email);
-
-			return "user/confirm";
-		}
+	//이메일url인증 확인
+	@RequestMapping(value = "/emailConfirm", method = RequestMethod.GET)
+	public String emailConfirm(@RequestParam String mem_email, @RequestParam String email_key, Model model) throws Exception{
+		System.out.println("--------------- controller emailConfirm() : 이메일 인증 확인");
+		System.out.println(mem_email + " / " + email_key);
 		
+		// 1: 회원가입시 전송되는 email type
+		int email_type = 1;
+		int key = memService.chkKey(mem_email, email_type);
+		
+		if(key==0) {
+			model.addAttribute("expired", "expired");
+		}	
+		
+		System.out.println("*****"+key);
+		memService.emailAuth(mem_email,email_key);
+		model.addAttribute("mem_email", mem_email);
+			return "user/confirm";
+	}
+	
 	// 로그인 페이지로 이동
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginGET(Model model, HttpSession session) throws IOException {
@@ -143,12 +142,12 @@ public class MemberController {
 		
 		if(mem==null) {
 			//회원가입 x sns유저
-			model.addAttribute("msg", "0");
+			model.addAttribute("loginmsg", "nosnsid");
 			return;
 		}else {
 			if(mem.getMem_type()==3) {
 				System.out.println("휴면계정");
-				model.addAttribute("msg", "3");
+				model.addAttribute("loginmsg", "memtype_3");
 				// 내용 추가해야함 - 
 				// 1년이내 로그인 시도하면, 휴면계정 풀리도록?
 				// 휴면계정 DB에 회원정보 이동.??
@@ -158,15 +157,20 @@ public class MemberController {
 			System.out.println("sns 로그인 성공");
 			// 4. 존재시 강제로그인
 			model.addAttribute("mem", mem);
-			model.addAttribute("msg", "1");
 			
 		}
+		
+		// 마지막 로그인 시간 업데이트
+		memService.lastLogin(mem.getMem_email(), new Date());
+		
+		//sns계정 로그인은 자동로그인 유지 안됨!
 			
 	}
 
 	@RequestMapping(value = "/loginPOST", method = RequestMethod.POST)
 	public void loginPOST(LoginDTO logDTO, HttpSession http, Model model) throws Exception {
 		// login 뷰에서 받은 데이터를 memDTO에 담는다.
+//loginDTO의 PW도 암호화?
 		MemberDTO memDTO = memService.loginPOST(logDTO);
 
 		System.out.println("##### 로그인 시도");
@@ -176,24 +180,24 @@ public class MemberController {
 		// 아이디가 없거나, 비밀번호가 불일치 하면 메서드 종료
 		if (memDTO == null) {
 			System.out.println("### 아이디가 DB에 없다.");
-			model.addAttribute("msg", "id");
+			model.addAttribute("loginmsg", "noid");
 			return;
 		} else if (memDTO != null) {
 			if (!BCrypt.checkpw(logDTO.getMem_password(), memDTO.getMem_password())) {
 				System.out.println("### 비밀번호 불일치");
-				model.addAttribute("msg", "pw");
+				model.addAttribute("loginmsg", "mispw");
 				return;
 			}
 			if(memDTO.getMem_type()==3) {
 				System.out.println("휴면계정");
-				model.addAttribute("msg", "3");
+				model.addAttribute("loginmsg", "memtype_3");
 				// 내용 추가해야함 - 
 				// 휴면계정 DB에 회원정보 이동.??
 				return;
 			}
 			if(memDTO.getMem_email_cert()==0) {
 				System.out.println("이메일 미인증");
-				model.addAttribute("msg", "email");
+				model.addAttribute("loginmsg", "noemailauth");
 				return;
 			}				
 			
@@ -239,6 +243,7 @@ public class MemberController {
 				loginCookie.setPath("/");
 				loginCookie.setMaxAge(0);
 				response.addCookie(loginCookie);
+				//자동로그인 설정 해제 
 				memService.keepLogin(memDTO.getMem_email(), "none", new Date());
 			}
 		}
@@ -261,11 +266,14 @@ public class MemberController {
 
 	// myinfo - 수정
 	@RequestMapping(value = "/myinfo_up")
-	public String myinfoUP(@ModelAttribute MemberDTO memDTO, Model model, RedirectAttributes redirect, MultipartFile file) throws Exception {
+	public String myinfoUP(@ModelAttribute MemberDTO memDTO, Model model, RedirectAttributes redirect) throws Exception {
 		System.out.println("%%% 회원번호 : " + memDTO.getMem_idx() + " 수정 %%%");
 
 		// 수정 전 정보
 		MemberDTO memDTOpre = memService.myinfo(memDTO.getMem_idx());
+		// pw암호화 : BCrypt.hashpw(암호화할 비밀번호, 암호화된 비밀번호);
+		String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
+		memDTO.setMem_password(hashedPW);
 
 		// 비밀번호 일치 확인
 		if (!BCrypt.checkpw(memDTO.getMem_password(),memDTOpre.getMem_password())) {
@@ -276,20 +284,8 @@ public class MemberController {
 		}
 		
 		System.out.println("### 비밀번호 일치 - 수정");
-		// pw암호화 : BCrypt.hashpw(암호화할 비밀번호, 암호화된 비밀번호);
-		String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
-		memDTO.setMem_password(hashedPW);
-		
-		String original = file.getOriginalFilename();
-		System.out.println("오리지널 : " +original);
-		/*
-		 * //프로필이미지 String savedurl = memService.photourl(); //이름 중복 확인 //UUID를 사용해야 할까?
-		 * 파일의 고유성을 위해?? memDTO.setMem_photo(savedurl);
-		 */
-
 		//수정
 		memService.myinfoUP(memDTO);
-
 		
 		return "redirect:/user/myinfo?mem_idx=" + memDTO.getMem_idx();
 	}
@@ -298,9 +294,12 @@ public class MemberController {
 	@RequestMapping(value = "/myinfo_del")
 	public String myinfoDEL(@RequestParam int mem_idx, @ModelAttribute MemberDTO memDTO, RedirectAttributes redirect) throws Exception {
 		System.out.println("%%% 회원번호 : " + mem_idx + " 탈퇴요청 %%%");
-		
+			
 		// 수정 전 정보
 		MemberDTO memDTOpre = memService.myinfo(memDTO.getMem_idx());
+		// pw암호화 : BCrypt.hashpw(암호화할 비밀번호, 암호화된 비밀번호);
+		String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
+		memDTO.setMem_password(hashedPW);
 
 		// 비밀번호 일치 확인
 		if (!BCrypt.checkpw(memDTO.getMem_password(),memDTOpre.getMem_password())) {
@@ -309,11 +308,19 @@ public class MemberController {
 					
 			return "redirect:/user/myinfo?mem_idx=" + memDTO.getMem_idx();		
 		}
-		System.out.println("### 비밀번호 일치 - 탈퇴");
-				
-		// 진행중인 펀딩이 있는지? 확인후 진행
-		// 참가중인 펀딩이 있는지 ? 확인후 진행
+
+		// ★★★★★★★★★★★★★★★★★★★★★★★★ 확인후 진행 ★★★★★★★★★★★★★★★★★★★★★★★★
+		// 참가중인 펀딩이 있는지 ? 배송완료 기준으로????????? 하지마 ㅇㅅㅇ!! 안해!!
+
+		// 진행중인 펀딩이 있는지? project 테이블에서, mem_idx에 해당하는 pro_status=4(펀딩종료)일때 탈퇴가능
+		int status = memService.statusPro(mem_idx);
+		if(status>0) {
+			redirect.addFlashAttribute("msg", "project");
+			return "redirect:/user/myinfo?mem_idx=" + memDTO.getMem_idx();
+		}	
+
 		memService.myinfoDEL(mem_idx);
+		
 		return "redirect:/user/logout";
 	}
 	
@@ -333,10 +340,10 @@ public class MemberController {
 				
 		if(chk==0) {
 			//System.out.println("아이디 없음");
-			model.addAttribute("msg", "1");
+			model.addAttribute("msg", "noid");
 		}else if(chk==1){
 			//System.out.println("아이디 있음");
-			model.addAttribute("msg", "2");
+			model.addAttribute("msg", "id");
 		}
 		
 		return "user/userfind";
@@ -378,7 +385,6 @@ public class MemberController {
 			//System.out.println("*****"+key);
 		model.addAttribute("email_key", email_key);
 		model.addAttribute("mem_email", mem_email);
-
 		return "user/resetPW";
 	}
 	
@@ -394,6 +400,13 @@ public class MemberController {
 
 		return "user/login";
 	}
+	
+	
+	
+	
+	//마지막 로그인시간을 기준으로 list뽑기
+	//휴면 예정회원에게 메일 발송
+	//장기 미 로그인 횐, 휴면회원으로 update
 	
 	
 

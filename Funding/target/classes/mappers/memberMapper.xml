@@ -17,34 +17,32 @@
 		<result property="mem_birth" column="mem_birth" />
 		<result property="mem_sex" column="mem_sex" />
 		<result property="mem_email_cert" column="mem_email_cert" />
-		<result property="mem_register_datetime"
-			column="mem_register_datetime" />
-		<result property="mem_lastlogin_datetime"
-			column="mem_lastlogin_datetime" />
+		<result property="mem_register_datetime" column="mem_register_datetime" />
+		<result property="mem_lastlogin_datetime" column="mem_lastlogin_datetime" />
 	</resultMap>
 
-	<insert id="snsjoin">
-		insert into
-			member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex,mem_type,naver_idx,mem_email_cert)
-		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex},'4',#{naver_idx},'1')
-	</insert>
-	<select id="snsLogin" resultType="memberDto">
-		select * from member where
-		naver_idx = #{naver_idx}
-	</select>
+
 
 	<insert id="join">
 		insert into
-			member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex)
-		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex})
+			member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex,mem_type)
+		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex},'1')
 	</insert>
+	
 	<insert id="join_email">
 		insert into member_auth(mem_email,email_key,email_type)
 			values(#{mem_email},#{email_key},"1")
 	</insert>
+	
+	<insert id="snsjoin">
+		insert into
+			member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex,mem_type,naver_idx,mem_email_cert)
+		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex},'2',#{naver_idx},'1')
+	</insert>
+
 	<update id="auth_email">
 		update member a, member_auth b
-			set a.mem_email_cert=1
+			set a.mem_email_cert='1'
 		where a.mem_email=b.mem_email
 			and b.email_key=#{email_key}
 			and b.mem_email=#{mem_email}
@@ -55,37 +53,38 @@
 		where mem_email=#{mem_email} and email_key!='expired'
 	</update>
 	<select id="chkexpired" resultType="int">
-		select count(*) from
-		member_auth
-		where mem_email=#{mem_email} and email_key!='expired' and email_type
-		=#{email_type}
+		select count(*) from member_auth
+		where mem_email=#{mem_email} and email_key!='expired' and email_type=#{email_type}
 	</select>
+
 
 	<select id="login" resultMap="memberMAP">
-		select * from member where
-		mem_email = #{mem_email}
+		select * from member where mem_email = #{mem_email}
 	</select>
-
+	<select id="snsLogin" resultType="memberDto">
+		select * from member where naver_idx = #{naver_idx}
+	</select>
+	
 	<update id="lastLogin">
 		update member set mem_lastlogin_datetime=#{lastLogin}
 			where mem_email = #{mem_email}
 	</update>
 
+
 	<update id="keepLogin">
 		update member set session_key = #{sessionid}, session_limit=#{sessionlimit}
 			where mem_email = #{mem_email}
 	</update>
-
 	<select id="checkSessionKey" resultMap="memberMAP">
 		select * from member
 		where session_key = #{value}
 	</select>
 
-	<select id="myinfo" resultType="memberDto">
-		select * from member where
-		mem_idx = #{mem_idx}
-	</select>
 
+
+	<select id="myinfo" resultType="memberDto">
+		select * from member where mem_idx = #{mem_idx}
+	</select>
 	<update id="myinfo_up">
 		update member set 
 			mem_password=#{mem_password},mem_name=#{mem_name},mem_phone=#{mem_phone},
@@ -94,10 +93,16 @@
 		 	,mem_photo=#{mem_photo}
 		where mem_idx=#{mem_idx}
 	</update>
-
 	<update id="myinfo_del">
-		update member set mem_type=3 where mem_idx=#{mem_idx}
+		update member set mem_type='3' where mem_idx=#{mem_idx}
 	</update>
+	
+	<select id="statusPro" resultType="int">
+		select count(*) from project
+			where mem_idx=#{mem_idx} and pro_status !='4'
+	</select>
+	
+	
 
 
 	<select id="userfindID" resultType="int">
@@ -116,6 +121,14 @@
 			and b.email_key=#{email_key}
 			and b.mem_email=#{mem_email}
 	</update>
+	
+	
+	
+	<select id="memchk_lastlogin" resultMap="memberMAP">
+		select * from member m, (select mem_email, datediff(now(),mem_lastlogin_datetime) as diff from member) d
+			where m.mem_email = d.mem_email and d.diff <![CDATA[ < ]]> 3
+	</select>
+	
 
 
 

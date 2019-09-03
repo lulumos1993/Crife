@@ -112,6 +112,11 @@ public class MemberDAOImpl implements MemberDAO {
 	public void myinfoDEL(int mem_idx) throws Exception {
 		System.out.println("##### memberDAO : myinfoDEL #####");
 		sql.update("member.myinfo_del", mem_idx);
+	}	
+
+	@Override
+	public int statusPro(int mem_idx) {
+		return sql.selectOne("member.statusPro", mem_idx);
 	}
 
 	@Override
@@ -140,4 +145,13 @@ public class MemberDAOImpl implements MemberDAO {
 		sql.update("member.keyTOexpired", mem_email);
 	}
 
+	@Override
+	public MemberDTO memchk_lastlogin(MemberDTO mem) throws Exception {
+		
+		return sql.selectOne("member.memchk_lastlogin", mem);
+	}
+
+	
+	
+	
 }

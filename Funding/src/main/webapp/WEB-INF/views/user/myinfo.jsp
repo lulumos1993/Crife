@@ -75,20 +75,20 @@
 			</div>
 	</div>	
 	<div class="mb-3">
-			<label for="name">이름 </label> 
+			<label for="name">이름 <span id="name" class="message"> </label> 
 			<input type="text" class="form-control" id="mem_name" name="mem_name" 
 					placeholder="이름" value="${myinfo.mem_name }" value required>
 			<div class="invalid-feedback">이름을 입력해 주세요</div>
 	</div>
 	<div class="mb-3">
-			<label for="phone">전화번호</label> 
+			<label for="phone">전화번호 <span id="phone" class="message"></label> 
 			<input type="text" class="form-control" id="mem_phone" name="mem_phone" 
 					placeholder="전화번호 : 숫자만 입력하세요" value="${myinfo.mem_phone }" value required maxlength="13">
 			<div class="invalid-feedback">전화번호를 입력해 주세요</div>
 	</div>
 	
 	<div class="mb-3">
-			<label for="birth_sex">주민번호</label> 
+			<label for="birth_sex">주민번호 <span id="num" class="message"></label> 
 			<div class="input-group">
 			<input type="text" class="form-control" id="mem_birth" name="mem_birth" 
 					placeholder="생년월일" value="${myinfo.mem_birth }" value required maxlength="6" minlength="6"> 
@@ -122,11 +122,6 @@
 				<input type="text" class="form-control" name="mem_address3" id="sample4_detailAddress" placeholder="상세주소" value="${myinfo.mem_address3}">
 				<input type="text" class="form-control" name="mem_address4" id="sample4_extraAddress" placeholder="참고항목" value="${myinfo.mem_address4}">
 			</div>
-	</div>
-	<div class="mb-3">
-			<label for="image">프로필 이미지 ${myinfo.mem_photo } </label> 
-			<input type="file" id="mem_photo" name="file" value="${myinfo.mem_photo }">
-	</div>
 	
 	<div class="row">
 	<div class="col-md-6 mb-3">
@@ -142,13 +137,13 @@
 
 
 	
-	<script type="text/javascript">
-	$(function() {
-		//자신의 정보에만 접근 할 수 있도록 정보 제한
-		if(${login.mem_idx}!=${myinfo.mem_idx}){
-			alert("잘못된 접근 입니다. 돌아가!");
-			self.location='<c:url value="/"/>';
-		}
+<script type="text/javascript">
+$(function() {
+
+	var msg = "${msg}";
+	if(msg=="project"){
+		alert("진행중인 프로젝트가 있습니다. 완료 후, 탈퇴신청해주세요.");
+	}
 		
 	//비밀번호 입력후에 수정&탈퇴 가능
 	var chkPW = "${chkPW}";
@@ -156,6 +151,62 @@
 		alert("비밀번호 불일치. 비밀번호 확인해");
 		document.getElementById('myinfoform').mem_password.focus();
 	}
+
+	//이름 한글만 입력
+	$('#mem_name').keydown(function(event){
+		 var regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+         var v = $(this).val();
+         if (regexp.test(v)) {
+        	 $("#name").text("한글만 입력해 주세요.");
+			 $("#name").css("color","red");
+             $(this).val(v.replace(regexp, ''));
+         }else{
+        	 $("#name").text("");
+         }
+
+	});
+
+	//전화번호 자동 하이픈 & 숫자만 입력
+	$('#mem_phone').keydown(function(event) {
+		//특수문자, 영어 입력 안됨! 숫자와 한글만 입력됨ㅜㅜ 한글도 입력하지 않도록?
+	    var key = event.charCode || event.keyCode || 0;
+	    $text = $(this);
+	    if (key !== 8 && key !== 9) {
+	        if ($text.val().length === 3) {
+	            $text.val($text.val() + '-');
+	        }
+	        if ($text.val().length === 8) {
+	            $text.val($text.val() + '-');
+	        }
+	    }
+	    return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));          
+	}); 
+
+	
+	//생년월일 & 성별 숫자만 입력
+	$('#mem_birth').keydown(function(event){
+		var regexp = /[^0-9]/gi;
+        var v = $(this).val();
+        if (regexp.test(v)) {
+        	$("#num").text("6자리 숫자만 입력해 주세요.");
+			$("#num").css("color","red");
+            $(this).val(v.replace(regexp, ''));
+        }else{
+        	$("#num").text("");
+        }
+
+	});
+	$('#mem_sex').keydown(function(event){
+		var regexp = /[^0-9]/gi;
+        var v = $(this).val();
+        if (regexp.test(v)) {
+        	$("#num").text("숫자만 입력해 주세요.");
+			$("#num").css("color","red");
+            $(this).val(v.replace(regexp, ''));
+        }else{
+        	$("#num").text("");
+        }
+	});
 
 	//수정
 	$("#btn_up").click(function() {

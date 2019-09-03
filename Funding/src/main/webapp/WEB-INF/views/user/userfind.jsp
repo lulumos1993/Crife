@@ -7,7 +7,8 @@
 <link href="../css/bootstrap.min.css" rel="stylesheet"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
-<link href="../css/form-validation.css" rel="stylesheet">  
+<link href="../css/user.css" rel="stylesheet">
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script type="text/javascript">
 
@@ -15,10 +16,10 @@
 	var mem_email = "${mem_email}";
 	var findpw = "${findpw}";
 	
-		if(msg=='1'){
+		if(msg=='noid'){
 			alert(mem_email+"는 존재하디 않는 입니다. 회원가입해 주세요.");
 			self.location='<c:url value="/user/join"/>';
-		}else if(msg=='2'){
+		}else if(msg=='id'){
 			alert(mem_email+"는 존재하는 회원 입니다. 로그인해 주세요.");
 			self.location='<c:url value="/user/login"/>';
 		}else if(msg=='email'){
@@ -68,7 +69,9 @@
 	
 		<h1 class="h3 mb-3 font-weight-norma"> 아이디 찾기 </h1>
 		<div class="mb-3">
-			<input class="form-control" name="mem_email" id="mem_email" type="text" placeholder="이메일 계정" autofocus> 		
+			<input class="form-control" name="mem_email" id="mem_email" type="email" placeholder="이메일 계정" autofocus> 
+		</div>
+		<div class="mb-3">		
 			<button class="btn btn-outline-secondary" type="button" id="btnid">확인</button>
 		</div>
 
@@ -85,7 +88,9 @@
   			이메일로 발송해드립니다.
   		</p>
 		<div class="mb-3">
-			<input class="form-control" name="findpw" id="findpw" type="text" placeholder="이메일  계정"> 		
+			<input class="form-control" name="findpw" id="findpw" type="email" placeholder="이메일  계정"> 	
+		</div>
+		<div class="mb-3">		
 			<button class="btn btn-outline-secondary" type="button" id="btnpw">확인</button>
 		</div>
 

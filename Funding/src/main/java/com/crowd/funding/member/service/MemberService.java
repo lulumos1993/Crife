@@ -40,6 +40,7 @@ public interface MemberService {
 
 	// 내정보 - 삭제(탈퇴요청)
 	void myinfoDEL(int mem_idx) throws Exception;
+	int statusPro(int mem_idx);
 	
 	// 아이디 찾기
 	int userfindID(String find) throws Exception;
@@ -47,6 +48,9 @@ public interface MemberService {
 	void userfindPW(String find) throws Exception;
 	// 비밀번호 재설정
 	void resetPW(String mem_password, String mem_email, String email_key) throws Exception;
+	
+	
+	MemberDTO memchk_lastlogin(MemberDTO mem) throws Exception;
 	
 
 }

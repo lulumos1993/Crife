@@ -7,7 +7,7 @@
 <link href="../css/bootstrap.min.css" rel="stylesheet"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
-<link href="../css/form-validation.css" rel="stylesheet">
+<link href="../css/user.css" rel="stylesheet">
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
 <script type="text/javascript">

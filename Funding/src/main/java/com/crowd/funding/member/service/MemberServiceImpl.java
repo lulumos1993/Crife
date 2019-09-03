@@ -118,6 +118,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public int statusPro(int mem_idx) {
+		
+		return memDAO.statusPro(mem_idx);
+	}
+
+	@Override
 	public int userfindID(String find) throws Exception {
 		System.out.println("##### memberService : userfindID #####");
 		return memDAO.userfindID(find);
@@ -151,5 +157,20 @@ public class MemberServiceImpl implements MemberService {
 	public void resetPW(String mem_password, String mem_email, String email_key) throws Exception {
 		memDAO.resetPW(mem_password, mem_email, email_key);
 	}
+
+	@Override
+	public MemberDTO memchk_lastlogin(MemberDTO mem) throws Exception {
+		
+						
+		return memDAO.memchk_lastlogin(mem);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

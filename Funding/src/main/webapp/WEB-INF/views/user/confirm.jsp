@@ -18,20 +18,24 @@
 	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
 	crossorigin="anonymous"></script>
 <script type="text/javascript">
+
+	//이메일 인증 url의 msg ( controller : emailConfirm() )
 	var mem_email = "${mem_email}";
  	var expired = "${expired}";
+ 	//myinfo의 msg
  	var msg = "${msg}";
  	
-	if(msg=="nomatch"){
-		alert("잘못된 접근입니다. 돌아가!");
+ 	if(msg=="nomatch"){
+		alert("잘못된 접근입니다.");
 		self.location='<c:url value="/"/>';
 	}else if(expired=="expired"){
-		alert("만료된 링크입니다.");
+		alert("인증이 만료된 링크입니다.");
 		self.location='<c:url value="/"/>';
-	} else{
+	}else{
 		alert(mem_email+" 님 회원가입 완료를 축하드립니다. 로그인 해");
 		self.location='<c:url value="/user/login"/>';
 	}
+
 
 </script>
 
