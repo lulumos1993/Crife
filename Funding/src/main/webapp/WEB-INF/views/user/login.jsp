@@ -45,18 +45,19 @@
 		<input type="checkbox" name="useCookie" id="useCookie"> 자동로그인
 		</label>
 	</div>
-	<button id="loginBtn" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+	<button id="loginBtn" class="btn btn-lg btn-outline-secondary btn-block" type="submit">Login</button>
 	<br>
 	<div id="naver_id_login" style="text-align:center;">
 	<a href="${naverURL }">
-		<img width="160" height="50" src="../images/NAVER.png" alt="login_naver" />
+		<img  height="50" src="../images/NAVER.png" alt="login_naver" />
 	</a>
 	</div>
 </form>
 <div class="dropdown-divider"></div>
   <a class="dropdown-item" href="join">회원가입</a>
   <a class="dropdown-item" href="userfind">이메일 찾기 & 비밀번호 재발급</a>
+  	<br>	<br>	<br>
 </div>
-
+	
 </body>
 </html>

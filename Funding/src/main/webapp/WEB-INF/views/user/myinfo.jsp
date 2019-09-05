@@ -122,13 +122,13 @@
 				<input type="text" class="form-control" name="mem_address3" id="sample4_detailAddress" placeholder="상세주소" value="${myinfo.mem_address3}">
 				<input type="text" class="form-control" name="mem_address4" id="sample4_extraAddress" placeholder="참고항목" value="${myinfo.mem_address4}">
 			</div>
-	
+		<br>
 	<div class="row">
 	<div class="col-md-6 mb-3">
-		<button type="button" id="btn_up" class="btn btn-lg btn-primary btn-block"> 수정 </button>
+		<button type="button" id="btn_up" class="btn btn-lg btn-outline-secondary btn-block"> 수정 </button>
 	</div>
 	<div class="col-md-6 mb-3">
-		<button type="button" id="btn_del" class="btn btn-lg btn-primary btn-block"> 탈퇴 </button>
+		<button type="button" id="btn_del" class="btn btn-lg btn-outline-secondary btn-block"> 탈퇴 </button>
 	</div>
 	</div>
 </form>
@@ -151,6 +151,21 @@ $(function() {
 		alert("비밀번호 불일치. 비밀번호 확인해");
 		document.getElementById('myinfoform').mem_password.focus();
 	}
+
+	//pw와 repw일치
+	$("#mem_repassword").keyup(function(){
+		var mem_password = $("#mem_password").val();
+		var mem_repassword = $("#mem_repassword").val();
+		
+		if(mem_password == mem_repassword){
+			$("#repwc").text("비밀번호가 일치합니다.");
+			$("#repwc").css("color","green"); 
+			chkpw = 1;
+		}else {
+			$("#repwc").text("비밀번호가 불일치");
+			$("#repwc").css("color","red");
+		}
+	});
 
 	//이름 한글만 입력
 	$('#mem_name').keydown(function(event){
@@ -213,12 +228,12 @@ $(function() {
 		var pw = $("#mem_password").val();
 		var repw = $("#mem_repassword").val();
 		if (pw == "") {
-			alert("비밀번호 입력해");
+			alert("비밀번호를 입력해주셔야 수정이 완료됩니다.");
 			document.getElementById('myinfoform').mem_password.focus();
 			return;
 		}
 		if (repw == "") {
-			alert("비밀번호 재입력해");
+			alert("비밀번호를 입력해주셔야 수정이 완료됩니다.");
 			document.getElementById('myinfoform').mem_repassword.focus();
 			return;
 		}
@@ -231,12 +246,12 @@ $(function() {
 		var pw = $("#mem_password").val();
 		var repw = $("#mem_repassword").val();
 		if (pw == "") {
-			alert("비밀번호 입력해");
+			alert("비밀번호를 입력해주셔야 탈퇴신청이 완료됩니다.");
 			document.getElementById('myinfoform').mem_password.focus();
 			return;
 		}
 		if (repw == "") {
-			alert("비밀번호 재입력해");
+			alert("비밀번호를 입력해주셔야 탈퇴신청이 완료됩니다.");
 			document.getElementById('myinfoform').mem_repassword.focus();
 			return;
 		}

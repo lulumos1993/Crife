@@ -54,6 +54,7 @@ public class MemberServiceImpl implements MemberService {
 		sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
 				.append("<a href='http://localhost:8080/funding/user/emailConfirm?mem_email=" + memDTO.getMem_email())
 				.append("&email_key=" + email_key + "' target='_blank'>이메일 인증</a>").toString());
+														//_blank : 새 윈도우 창을 열어서, 웹페이지를 엽니다. 
 		sendMail.setFrom("lulumos1993@gmail.com", "페퍼민트");
 		sendMail.setTo(memDTO.getMem_email());
 		sendMail.send();

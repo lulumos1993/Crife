@@ -106,7 +106,7 @@ public class MemberController {
 		
 		if(key==0) {
 			model.addAttribute("expired", "expired");
-		}	
+		}
 		
 		System.out.println("*****"+key);
 		memService.emailAuth(mem_email,email_key);
@@ -230,6 +230,8 @@ public class MemberController {
 	// 로그아웃 처리
 	@RequestMapping(value = "/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession http) throws Exception {
+		
+		System.out.println("로그아웃");
 		Object ob = http.getAttribute("login");
 
 		if (ob != null) {
@@ -271,9 +273,6 @@ public class MemberController {
 
 		// 수정 전 정보
 		MemberDTO memDTOpre = memService.myinfo(memDTO.getMem_idx());
-		// pw암호화 : BCrypt.hashpw(암호화할 비밀번호, 암호화된 비밀번호);
-		String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
-		memDTO.setMem_password(hashedPW);
 
 		// 비밀번호 일치 확인
 		if (!BCrypt.checkpw(memDTO.getMem_password(),memDTOpre.getMem_password())) {
@@ -297,10 +296,7 @@ public class MemberController {
 			
 		// 수정 전 정보
 		MemberDTO memDTOpre = memService.myinfo(memDTO.getMem_idx());
-		// pw암호화 : BCrypt.hashpw(암호화할 비밀번호, 암호화된 비밀번호);
-		String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
-		memDTO.setMem_password(hashedPW);
-
+	
 		// 비밀번호 일치 확인
 		if (!BCrypt.checkpw(memDTO.getMem_password(),memDTOpre.getMem_password())) {
 			System.out.println("### 탈퇴요청 - 비밀번호 불일치");
@@ -320,6 +316,7 @@ public class MemberController {
 		}	
 
 		memService.myinfoDEL(mem_idx);
+		redirect.addFlashAttribute("msg", "del");
 		
 		return "redirect:/user/logout";
 	}

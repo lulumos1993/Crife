@@ -7,6 +7,7 @@
 <link href="../css/bootstrap.min.css" rel="stylesheet"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
+<link href="../css/form-validation.css" rel="stylesheet">
 <link href="../css/user.css" rel="stylesheet">
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
@@ -18,6 +19,35 @@
 	} 
 	
 	$(document).ready(function() {
+
+		//pw 유효성 검사 : 8자리 이상, 15자리 이하, 문자+숫자+특문
+		var pwCheck = RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/);
+		$("#mem_password").keydown(function(){
+			var mem_password = $("#mem_password").val();
+			if(!pwCheck.test(mem_password)){
+				$("#pwc").text("최소 8자리 이상, 최소 1개의 문자, 숫자, 특수문자");
+				$("#pwc").css("color","red");
+			}else{
+				$("#pwc").text("");
+			}
+		});
+		
+
+		//pw와 repw일치
+		$("#mem_repassword").keyup(function(){
+			var mem_password = $("#mem_password").val();
+			var mem_repassword = $("#mem_repassword").val();
+			
+			if(mem_password == mem_repassword){
+				$("#repwc").text("비밀번호가 일치합니다.");
+				$("#repwc").css("color","green"); 
+				chkpw = 1;
+			}else {
+				$("#repwc").text("비밀번호가 불일치");
+				$("#repwc").css("color","red");
+			}
+		});
+		
 		$("#btn").click(function() {
 			var pw = $("#mem_password").val();
 			var repw = $("#mem_repassword").val();
@@ -48,19 +78,19 @@
 		<h1 class="h3 mb-3 font-weight-norma"> 비밀번호 재설정 </h1>
 
 		<div class="mb-3">
-			<label for="password">비밀번호       <span id="pwc"></span></label> 
+			<label for="password">비밀번호       <span id="pwc" class="message"></span></label> 
 			<input type="password" class="form-control" id="mem_password" name="mem_password" 
 					placeholder="비밀번호" value required maxlength="15" minlength="8">
 			<div class="invalid-feedback">비밀번호를 입력해 주세요</div>
 		</div>
 		<div class="mb-3">
-			<label for="repassword">비밀번호 재입력       <span id="repwc"></span></label> 
+			<label for="repassword">비밀번호 재입력        <span id="repwc" class="message"></span></label> 
 			<input type="password" class="form-control" id="mem_repassword" name="mem_repassword" 
 					placeholder="비밀번호 재입력" value required maxlength="15" minlength="8">
 			<div class="invalid-feedback">비밀번호를 다시 입력해 주세요</div>
 		</div>
 		
-		<button type="button" id="btn" class="btn btn-lg btn-primary btn-block">완료</button>
+		<button type="button" id="btn" class="btn btn-lg btn-outline-secondary btn-block">완료</button>
 
 		</table>
 </form>

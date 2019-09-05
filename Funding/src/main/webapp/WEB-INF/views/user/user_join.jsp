@@ -99,7 +99,9 @@
 				<div class="invalid-feedback" >1자리 숫자를 입력해 주세요</div>
 			</div>
 		</div>
-		<button type="submit" id="btnSave" class="btn btn-lg btn-primary btn-block">확인</button>
+
+		<button type="submit" id="btnSave" class="btn btn-lg btn-outline-secondary btn-block">확인</button>
+
 	</form>
 	
 </div>

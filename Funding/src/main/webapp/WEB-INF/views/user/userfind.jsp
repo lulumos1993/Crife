@@ -34,7 +34,7 @@
 		$("#btnid").click(function() {
 			var mem_email = $("#mem_email").val();
 			if (mem_email == "") {
-				alert("id 입력해야 찾아주지ㅠ");
+				alert("email을 입력해 주세요.");
 				document.getElementById('findidform').mem_email.focus();
 			}else{
 				document.getElementById('findidform').submit();
@@ -45,7 +45,7 @@
 		$("#btnpw").click(function() {
 			var findpw = $("#findpw").val();
 			if (findpw == "") {
-				alert("pw 입력해야 찾아주지ㅠ");
+				alert("email을 입력해 주세요.");
 				document.getElementById('findpwform').findpw.focus();
 			}else{
 				document.getElementById('findpwform').submit();
