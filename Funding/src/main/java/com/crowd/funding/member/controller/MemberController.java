@@ -54,11 +54,12 @@ public class MemberController {
 		// pw암호화 : BCrypt.hashpw(암호화할 비밀번호, 암호화된 비밀번호);
 		String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
 		memDTO.setMem_password(hashedPW);
-
-		memService.joinPOST(memDTO);
+		
+		//mem_register_datetime
+		memService.joinPOST(memDTO,new Date());
 		redirect.addFlashAttribute("msg", "registered");
 
-		return "user/login";
+		return "redirect:/user/login";
 	}
 	
 	//회원가입 이메일 중복확인
@@ -87,7 +88,7 @@ public class MemberController {
 			String hashedPW = BCrypt.hashpw(memDTO.getMem_password(), BCrypt.gensalt());
 			memDTO.setMem_password(hashedPW);
 
-			memService.snsjoinPOST(memDTO);
+			memService.snsjoinPOST(memDTO,new Date());
 			redirect.addFlashAttribute("msg", "sns");
 
 			return "redirect:/user/login";

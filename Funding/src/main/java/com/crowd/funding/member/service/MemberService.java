@@ -12,9 +12,9 @@ public interface MemberService {
 	
 	//sns
 		MemberDTO snsLogin(MemberDTO mem) throws Exception;
-		void snsjoinPOST(MemberDTO memDTO) throws Exception;
+		void snsjoinPOST(MemberDTO memDTO, Date registertime) throws Exception;
 
-	void joinPOST(MemberDTO memDTO) throws Exception;
+	void joinPOST(MemberDTO memDTO, Date registertime) throws Exception;
 
 	MemberDTO loginPOST(LoginDTO logDTO) throws Exception;
 	

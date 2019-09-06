@@ -16,8 +16,9 @@ public class MemberDAOImpl implements MemberDAO {
 	SqlSession sql;
 
 	@Override
-	public void snsjoinPOST(MemberDTO memDTO) throws Exception {
+	public void snsjoinPOST(MemberDTO memDTO, Date registertime) throws Exception {
 		System.out.println("##### memberDAO : snsjoinPOST #####");
+		memDTO.setMem_register_datetime(registertime);
 		sql.insert("member.snsjoin", memDTO);
 	}
 
@@ -28,8 +29,10 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public void joinPOST(MemberDTO memDTO) throws Exception {
+	public void joinPOST(MemberDTO memDTO, Date registertime) throws Exception {
 		System.out.println("##### memberDAO : joinPOST #####");
+		
+		memDTO.setMem_register_datetime(registertime);
 
 		sql.insert("member.join", memDTO);
 	}

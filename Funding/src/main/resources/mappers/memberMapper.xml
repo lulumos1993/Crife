@@ -25,8 +25,8 @@
 
 	<insert id="join">
 		insert into
-			member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex,mem_type)
-		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex},'1')
+			member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex,mem_type,mem_email_cert,mem_register_datetime)
+		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex},'1','0',#{mem_register_datetime})
 	</insert>
 	
 	<insert id="join_email">
@@ -36,8 +36,8 @@
 	
 	<insert id="snsjoin">
 		insert into
-			member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex,mem_type,naver_idx,mem_email_cert)
-		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex},'2',#{naver_idx},'1')
+			member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex,mem_type,naver_idx,mem_email_cert,mem_register_datetime)
+		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex},'2',#{naver_idx},'1',#{mem_register_datetime})
 	</insert>
 
 	<update id="auth_email">

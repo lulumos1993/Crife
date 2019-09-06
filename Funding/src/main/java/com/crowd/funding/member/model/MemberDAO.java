@@ -6,8 +6,8 @@ public interface MemberDAO {
 
 	// sns
 	MemberDTO snsLogin(MemberDTO mem) throws Exception;
-	void snsjoinPOST(MemberDTO memDTO) throws Exception;
-	void joinPOST(MemberDTO memDTO) throws Exception;
+	void snsjoinPOST(MemberDTO memDTO, Date registertime) throws Exception;
+	void joinPOST(MemberDTO memDTO, Date registertime) throws Exception;
 	MemberDTO loginPOST(LoginDTO logDTO) throws Exception;
 	// 이메일 인증키 db에 저장
 	void creatKey(String mem_email, String email_key) throws Exception;

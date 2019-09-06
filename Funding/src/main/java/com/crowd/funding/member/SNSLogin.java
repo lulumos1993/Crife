@@ -35,7 +35,7 @@ public class SNSLogin {
 		oauthService.signRequest(accessToken, request);
 
 		Response response = oauthService.execute(request);
-		System.out.println("ㄱㄱㄱㄱㄱㄱ " +response.getBody());
+		System.out.println("snsLogin ㄱㄱㄱㄱㄱㄱ " +response.getBody());
 
 		return parseJson(response.getBody());
 	}

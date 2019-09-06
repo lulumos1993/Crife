@@ -34,15 +34,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void snsjoinPOST(MemberDTO memDTO) throws Exception {
+	public void snsjoinPOST(MemberDTO memDTO, Date registertime) throws Exception {
 		System.out.println("##### memberService : joinPOST #####");
-		memDAO.snsjoinPOST(memDTO);
+		memDAO.snsjoinPOST(memDTO, registertime);
 	}
 
 	@Override
-	public void joinPOST(MemberDTO memDTO) throws Exception {
+	public void joinPOST(MemberDTO memDTO, Date registertime) throws Exception {
 		System.out.println("##### memberService : joinPOST #####");
-		memDAO.joinPOST(memDTO);
+		memDAO.joinPOST(memDTO, registertime);
 
 		// 인증키 생성
 		String email_key = new TempKey().getKey(50, false);
