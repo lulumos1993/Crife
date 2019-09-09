@@ -56,8 +56,8 @@
 
 		<div class="mb-3">
 			<label for="name">이름  <span id="name" class="message"></label> 
-			<input type="text" class="form-control" id="mem_name" name="mem_name" 
-					placeholder="이름" value required>
+			<input type="text" class="form-control" id="mem_name" name="mem_name" value="${snsUser.mem_name}"
+					placeholder="이름" value required readonly="readonly">
 			<div class="invalid-feedback">이름을 입력해 주세요</div>
 		</div>
 		
@@ -75,8 +75,8 @@
 					placeholder="생년월일" value required maxlength="6" minlength="6"> 
 				<div class="invalid-feedback">6자리 숫자를 입력해 주세요</div>
 			 - 
-			<input type="text" class="form-control" id="mem_sex" name="mem_sex"	
-					placeholder="성별"  value required maxlength="1">
+			<input type="text" class="form-control" id="mem_sex" name="mem_sex"	value="${snsUser.mem_sex}"
+					placeholder="성별"  value required maxlength="1" readonly="readonly">
 			<div class="input-group-append"><span class="input-group-text">XXXXXX</span></div>
 				<div class="invalid-feedback">1자리 숫자를 입력해 주세요</div>
 			</div>
@@ -102,6 +102,7 @@
 	$(document).ready(function() {
 		var chk = 0;
 		var chkpw = 0;
+		var pw = 0;
 		
 
 		//이메일 중복확인	
@@ -163,6 +164,7 @@
 				$("#pwc").css("color","red");
 			}else{
 				$("#pwc").text("");
+				pw = 1;
 			}
 		});
 		
@@ -247,7 +249,11 @@
 			} else if(chkpw!=1){
 				alert("비밀번호를 확인 해주세요.");
 				return false;
+			}else if(pw !=1){
+				alert("비밀번호가 양식에 일치하지 않습니다. \n비밀번호는 8글자 이상, 15글자 이하 \n 최소 1개의 문자, 숫자, 특수문자로 구성되어야 합니다. ");
+				return false;
 			}
+				
 
 		});
 

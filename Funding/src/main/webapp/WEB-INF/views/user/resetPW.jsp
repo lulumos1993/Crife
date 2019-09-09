@@ -20,6 +20,9 @@
 	
 	$(document).ready(function() {
 
+		var pw = 0;
+		var chkpw = 0;
+
 		//pw 유효성 검사 : 8자리 이상, 15자리 이하, 문자+숫자+특문
 		var pwCheck = RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/);
 		$("#mem_password").keydown(function(){
@@ -28,8 +31,10 @@
 				$("#pwc").text("최소 8자리 이상, 최소 1개의 문자, 숫자, 특수문자");
 				$("#pwc").css("color","red");
 			}else{
+				pw = 1;
 				$("#pwc").text("");
 			}
+			console.log(pw);
 		});
 		
 
@@ -49,9 +54,12 @@
 		});
 		
 		$("#btn").click(function() {
-			var pw = $("#mem_password").val();
-			var repw = $("#mem_repassword").val();
-			if (pw != repw) {
+
+			
+			if(pw!=1){
+				alert("비밀번호가 양식에 일치하지 않습니다. \n비밀번호는 8글자 이상, 15글자 이하 \n 최소 1개의 문자, 숫자, 특수문자로 구성되어야 합니다. ");
+				return false;
+			}else if (chkpw != 1) {
 				alert("비밀번호 입력값이 다릅니다. 확인해 주세요.");
 				document.getElementById('resetpwform').mem_password.focus();
 				return;

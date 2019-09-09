@@ -113,6 +113,7 @@
 $(document).ready(function(){
 	var chk = 0;
 	var chkpw = 0;
+	var pw = 0;
 	
 
 	//이메일 중복확인	
@@ -172,6 +173,7 @@ $(document).ready(function(){
 			$("#pwc").css("color","red");
 		}else{
 			$("#pwc").text("");
+			pw=1;
 		}
 	});
 	
@@ -255,6 +257,9 @@ $(document).ready(function(){
 			return false;
 		} else if(chkpw!=1){
 			alert("비밀번호를 확인 해주세요.");
+			return false;
+		} else if(pw !=1){
+			alert("비밀번호가 양식에 일치하지 않습니다. \n비밀번호는 8글자 이상, 15글자 이하 \n 최소 1개의 문자, 숫자, 특수문자로 구성되어야 합니다. ");
 			return false;
 		}
 

@@ -117,7 +117,7 @@
 				<input type="text" class="form-control" name="mem_address2" id="sample4_jibunAddress" placeholder="지번주소" value="${myinfo.mem_address2}">
 			</div>
 		</div>
-				<span id="guide" style="color:#999;display:none"></span><br>
+				<span id="guide" style="color:#999;display:none"></span>
 			<div class="input-group">
 				<input type="text" class="form-control" name="mem_address3" id="sample4_detailAddress" placeholder="상세주소" value="${myinfo.mem_address3}">
 				<input type="text" class="form-control" name="mem_address4" id="sample4_extraAddress" placeholder="참고항목" value="${myinfo.mem_address4}">

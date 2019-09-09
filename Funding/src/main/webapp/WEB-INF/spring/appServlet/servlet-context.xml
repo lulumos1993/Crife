@@ -28,8 +28,8 @@
 	<resources location="/WEB-INF/views/maker/" mapping="/maker/**"/>
 	<resources location="/WEB-INF/views/myorder/" mapping="/myorder/**"/>
 	<resources location="/WEB-INF/views/order/" mapping="/order/**"/>
-	<resources location="/WEB-INF/views/reward/" mapping="/reward/**"/> -->
-	<resources location="/WEB-INF/views/user/" mapping="/user/**"/>
+	<resources location="/WEB-INF/views/reward/" mapping="/reward/**"/>
+	<resources location="/WEB-INF/views/user/" mapping="/user/**"/> -->
 	<!-- 	views폴더 밑에 폴더 생성시 한줄씨 추가
 			<resources location="/WEB-INF/views/images/" mapping="/images/**"/> -->
 
@@ -79,6 +79,7 @@
 	<beans:bean class="java.lang.String" id="uploadPath">
 		<beans:constructor-arg value="C:/upload"/>	<!-- value값에 파일업로드시 저장할 폴더 경로 지정 -->
 	</beans:bean>
+
 
 	<!-- oauth2 login -->
 	<beans:bean id="naverClientID" class="java.lang.String">
